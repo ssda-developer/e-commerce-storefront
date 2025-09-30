@@ -1,55 +1,17 @@
 import './App.css';
-import React, { useEffect, useState } from "react";
-import ProductList from "./components/product-list/ProductList.jsx";
-// import Filters from "./components/filters/Filters.jsx";
-// import Pagination from "./components/pagination/Pagination.jsx";
-import { getProducts } from "./api/products.js";
+import { Routes, Route } from "react-router";
+import ProductsPage from "./pages/products/ProductsPage.jsx";
+import CartPage from "./pages/cart/CartPage.jsx";
+import ProductDetailPage from "./pages/product-detail-page/ProductDetailPage.jsx";
 
 function App() {
-    const [loading, setLoading] = useState(true);
-    const [products, setProducts] = useState([]);
-
-    // const [limit] = useState(8);
-    // const [pageNumber, setPageNumber] = useState(1);
-    // const [totalPages, setTotalPages] = useState(0);
-
-    // const [filters, setFilters] = useState({});
-
-    const fetchProducts = async () => {
-        try {
-            const { data } = await getProducts({
-                // page: pageNumber,
-                // limit,
-                // category: filters
-            });
-            console.log(data);
-            setProducts(data.products);
-            // setTotalPages(data.total);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchProducts();
-    }, []); // pageNumber, filters
-
-    if (loading) return <>Loading...</>;
-
     return (
-        <div className="flex flex-col py-10">
-            {/*<Filters onFilterChange={setFilters} />*/}
-            <ProductList productsList={products}/>
-            {/*<Pagination*/}
-            {/*    currentPage={pageNumber}*/}
-            {/*    limitPage={limit}*/}
-            {/*    totalPages={totalPages}*/}
-            {/*    onPageChange={setPageNumber}*/}
-            {/*/>*/}
-        </div>
-    );
+        <Routes>
+            <Route path="/" element={<ProductsPage/>}/>
+            <Route path="/cart" element={<CartPage/>}/>
+            <Route path="/product/:id" element={<ProductDetailPage/>}/>
+        </Routes>
+    )
 }
 
 export default App;
