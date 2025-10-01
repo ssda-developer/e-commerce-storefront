@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ProductDetailPage(props) {
+function ProductDetailPage() {
     return (
         <div>ProductDetailPage</div>
     );

@@ -1,0 +1,1 @@
+export const VALID_DISCOUNT_CODE = 'ReDISchool';

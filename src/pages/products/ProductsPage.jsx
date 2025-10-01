@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { getProducts } from "../../api/products.js";
-import ProductList from "../../components/product-list/ProductList.jsx";
+import ProductList from "../../components/product/ProductList.jsx";
+import CartButton from "../../components/cart/CartButton.jsx";
+import { useCartContext } from "../../context/CartContext.jsx";
 
 function ProductsPage() {
     const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState([]);
+    const { cart } = useCartContext();
 
     // const [limit] = useState(8);
     // const [pageNumber, setPageNumber] = useState(1);
@@ -36,16 +39,20 @@ function ProductsPage() {
     if (loading) return <>Loading...</>;
 
     return (
-        <div className="flex flex-col py-10">
-            {/*<Filters onFilterChange={setFilters} />*/}
-            <ProductList productsList={products}/>
-            {/*<Pagination*/}
-            {/*    currentPage={pageNumber}*/}
-            {/*    limitPage={limit}*/}
-            {/*    totalPages={totalPages}*/}
-            {/*    onPageChange={setPageNumber}*/}
-            {/*/>*/}
-        </div>
+        <>
+            <CartButton count={cart.length}/>
+            <div className="flex flex-col py-10">
+                {/*<Filters onFilterChange={setFilters} />*/}
+                <ProductList productsList={products}/>
+                {/*<Pagination*/}
+                {/*    currentPage={pageNumber}*/}
+                {/*    limitPage={limit}*/}
+                {/*    totalPages={totalPages}*/}
+                {/*    onPageChange={setPageNumber}*/}
+                {/*/>*/}
+            </div>
+        </>
+
     );
 }
 
