@@ -1,4 +1,6 @@
 import { useCartContext } from "../../context/CartContext.jsx";
+import { NavLink } from "react-router";
+import { BsChevronLeft } from "react-icons/bs";
 
 const ProductCard = ({ card }) => {
     const { addItemToCart } = useCartContext();
@@ -6,19 +8,17 @@ const ProductCard = ({ card }) => {
     const handlerAddItemToCart = (e) => {
         e.preventDefault();
         addItemToCart(card);
-        // console.log(e);
     }
 
     return (
         <div className="flex flex-col items-center bg-white shadow-sm border border-slate-200 rounded-lg h-full">
-            <div className="p-2.5 h-[150px] w-[150px] overflow-hidden rounded-xl bg-clip-border">
+            <NavLink to={`/product/${card.id}`} end className="flex p-2.5 h-[150px] w-[150px] overflow-hidden rounded-xl bg-clip-border">
                 <img
                     src={card.images[0]}
                     alt={card.description}
                     className="h-full w-full object-contain rounded-md"
                 />
-            </div>
-
+            </NavLink>
             <div className="p-4 flex-1 flex flex-col">
                 <div className="mb-2 flex justify-between">
                     <h3 className="text-slate-800 text-sm font-semibold">{card.title}</h3>

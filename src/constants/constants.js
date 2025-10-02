@@ -1,1 +1,1 @@
-export const VALID_DISCOUNT_CODE = 'ReDISchool';
+export const VALID_DISCOUNT_CODE = 'REDISCHOOL';

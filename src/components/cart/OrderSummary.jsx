@@ -24,7 +24,7 @@ const OrderSummary = () => {
             setError("Invalid discount code");
         }
     };
-
+    //TODO: fixed --0.01 when I deleted all items
     return (
         <div className="bg-white rounded-lg shadow p-4 w-80 h-full">
             <h3 className="text-lg font-semibold mb-4">Order summary</h3>

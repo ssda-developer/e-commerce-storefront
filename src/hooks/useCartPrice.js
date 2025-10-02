@@ -1,11 +1,9 @@
-export function useCartPrice(cart, discountRate) {
+export function useCartPrice(cart, discountRate) { //TODO: this works many times, maybe use useMemo?
     const subtotal = cart.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
     );
-    console.log(subtotal, discountRate);
     const discount = discountRate ? subtotal - discountRate : 0;
-    console.log(discount);
     const total = Math.max(subtotal - discount, 0);
 
     return { subtotal, discount, total };

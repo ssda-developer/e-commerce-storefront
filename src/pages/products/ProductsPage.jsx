@@ -5,26 +5,18 @@ import CartButton from "../../components/cart/CartButton.jsx";
 import { useCartContext } from "../../context/CartContext.jsx";
 
 function ProductsPage() {
+    const { cart } = useCartContext();
     const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState([]);
-    const { cart } = useCartContext();
+    const [searchTerm, seSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('all');
 
-    // const [limit] = useState(8);
-    // const [pageNumber, setPageNumber] = useState(1);
-    // const [totalPages, setTotalPages] = useState(0);
-
-    // const [filters, setFilters] = useState({});
+    const PRODUCTS_CATEGORIES = new Set(products.map(product => product.category));
 
     const fetchProducts = async () => {
         try {
-            const { data } = await getProducts({
-                // page: pageNumber,
-                // limit,
-                // category: filters
-            });
-            console.log(data);
+            const { data } = await getProducts();
             setProducts(data.products);
-            // setTotalPages(data.total);
         } catch (err) {
             console.error(err);
         } finally {
@@ -32,9 +24,23 @@ function ProductsPage() {
         }
     };
 
+    const handleSearch = (e) => {
+        seSearchTerm(e.target.value);
+    }
+
+    const handleFilter = (e) => {
+        setSelectedCategory(e.target.value);
+    }
+
+    const filteredProducts = products.filter(product => {
+        const categoryMatch = selectedCategory === 'all' ? true : product.category.toLowerCase() === selectedCategory.toLowerCase();
+        const searchTermMatch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
+        return categoryMatch && searchTermMatch;
+    });
+
     useEffect(() => {
         fetchProducts();
-    }, []); // pageNumber, filters
+    }, []);
 
     if (loading) return <>Loading...</>;
 
@@ -42,17 +48,20 @@ function ProductsPage() {
         <>
             <CartButton count={cart.length}/>
             <div className="flex flex-col py-10">
-                {/*<Filters onFilterChange={setFilters} />*/}
-                <ProductList productsList={products}/>
-                {/*<Pagination*/}
-                {/*    currentPage={pageNumber}*/}
-                {/*    limitPage={limit}*/}
-                {/*    totalPages={totalPages}*/}
-                {/*    onPageChange={setPageNumber}*/}
-                {/*/>*/}
+                <div className="flex">
+                    <input type="text" className="border-2" onChange={handleSearch}/>
+                    <label htmlFor="category-select">Choose a category</label>
+
+                    <select onChange={handleFilter}>
+                        <option value="all">All Categories</option>
+                        {[...PRODUCTS_CATEGORIES].map((category, index) => (
+                            <option key={category + '' + index} value={category}> {category.toUpperCase()} </option>
+                        ))}
+                    </select>
+                </div>
+                <ProductList productsList={filteredProducts}/>
             </div>
         </>
-
     );
 }
 
