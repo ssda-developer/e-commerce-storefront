@@ -40,67 +40,71 @@ const Filters = ({ products = [], setFilteredProducts }) => {
         setSelectedCategory(ALL_CATEGORIES);
     }
 
-    const displayCategoryLabel = (category) => (category === ALL_CATEGORIES ? ALL_CATEGORIES : category);
-
     return (
-        <div className="w-152 mx-auto relative mb-4">
-            <div className="flex">
-                <button
-                    id="dropdown-button"
-                    type="button"
-                    onClick={toggleDropdown}
-                    className="shrink-0 z-10 inline-flex items-center gap-2 py-2.5 px-4 text-sm font-medium text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100"
-                >
-                    {displayCategoryLabel(selectedCategory)}
-                    {isOpen ? <BsChevronUp/> : <BsChevronDown/>}
-                </button>
-
-                {isOpen && (
-                    <div
-                        id="dropdown"
-                        className="absolute top-12 left-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44"
+        <div className="w-full mb-6 px-4 md:px-8 lg:px-12">
+            <div className="flex flex-col gap-2 md:flex-row">
+                <div className="relative w-full md:w-auto">
+                    <button
+                        id="dropdown-button"
+                        type="button"
+                        aria-haspopup="listbox"
+                        aria-expanded={isOpen}
+                        onClick={toggleDropdown}
+                        className="inline-flex w-full justify-between items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-800 bg-indigo-50 border rounded-md md:rounded-l-md md:rounded-r-none hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-300 cursor-pointer"
                     >
-                        <ul className="py-2 text-sm text-gray-700" aria-labelledby="dropdown-button">
-                            <li>
-                                <button
-                                    type="button"
-                                    onClick={() => handleCategorySelect(ALL_CATEGORIES)}
-                                    className={`inline-flex w-full px-4 py-2 hover:bg-gray-100 ${selectedCategory === ALL_CATEGORIES ? "bg-blue-50 text-blue-600" : ""}`}
-                                >
-                                    {ALL_CATEGORIES}
-                                </button>
-                            </li>
+                        {selectedCategory}
+                        {isOpen ? <BsChevronUp/> : <BsChevronDown/>}
+                    </button>
 
-                            {categories.map((item, idx) => (
-                                <li key={`${item}-${idx}`}>
+                    {isOpen && (
+                        <div className="absolute z-20 mt-1 bg-white border rounded-md shadow-md w-44">
+                            <ul role="listbox" aria-labelledby="dropdown-button" className="py-1">
+                                <li>
                                     <button
                                         type="button"
-                                        onClick={() => handleCategorySelect(item)}
-                                        className={`inline-flex w-full px-4 py-2 hover:bg-gray-100 ${item === selectedCategory ? "bg-blue-50 text-blue-600" : ""}`}
+                                        onClick={() => handleCategorySelect(ALL_CATEGORIES)}
+                                        className={`w-full text-left px-4 py-2 text-sm hover:bg-indigo-50 focus:outline-none ${selectedCategory === ALL_CATEGORIES ? 'bg-indigo-50 text-indigo-700' : ''}`}
                                     >
-                                        {item}
+                                        {ALL_CATEGORIES}
                                     </button>
                                 </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
 
-                <div className="relative w-full">
-                    <input
-                        type="search"
-                        id="search-dropdown"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Search products..."
-                    />
+                                {categories.map((item, idx) => (
+                                    <li key={`${item}-${idx}`}>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleCategorySelect(item)}
+                                            className={`w-full text-left px-4 py-2 text-sm hover:bg-indigo-50 focus:outline-none ${item === selectedCategory ? 'bg-indigo-50 text-indigo-700' : ''}`}
+                                        >
+                                            {item}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
+
+                <div className="flex-1 relative">
+                    <div className="relative">
+                        <input
+                            type="search"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            placeholder="Search products..."
+                            className="block w-full p-2.5 pl-10 text-sm border bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                            aria-label="Search products"
+                        />
+                        <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                <BsSearch/>
+                            </span>
+                    </div>
                 </div>
 
                 <button
                     type="button"
-                    className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-gray-900 bg-gray-200 rounded-e-lg border border-gray-300 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                     onClick={handleReset}
+                    className="px-4 py-2 text-sm font-medium rounded-md md:rounded-r-md md:rounded-l-none bg-white border hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-300 cursor-pointer"
                 >
                     Reset
                 </button>

@@ -35,7 +35,7 @@ function ProductsPage() {
 
     return (
         <>
-            <CartButton count={cart?.length ?? 0}/>
+            <CartButton count={cart?.length ?? 0} />
             <div className="flex flex-col py-10">
                 <Filters products={products} setFilteredProducts={setFilteredProducts} />
                 <ProductList productsList={filteredProducts} />
