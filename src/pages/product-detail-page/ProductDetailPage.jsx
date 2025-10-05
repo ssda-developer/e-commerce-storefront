@@ -90,7 +90,10 @@ function ProductDetailPage() {
                     </div>
 
                     <span className="text-gray-500 text-sm">Available: {product.stock}</span>
-                    <QuantitySelector stock={product.stock} value={quantity} onChange={setQuantity} />
+                    <div className={`flex items-center gap-4`}>
+                        <span className="font-semibold">Quantity:</span>
+                        <QuantitySelector stock={product.stock} value={quantity} onChange={setQuantity} />
+                    </div>
 
                     <div className="flex flex-col gap-3 my-4">
                         <button

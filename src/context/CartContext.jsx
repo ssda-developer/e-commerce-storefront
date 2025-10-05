@@ -23,7 +23,7 @@ export const CartProvider = ({ children }) => {
             if (existingItem) {
                 return prev.map((item) =>
                     item.id === product.id
-                        ? { ...item, quantity: item.quantity + quantity }
+                        ? { ...item, quantity }
                         : item
                 );
             }
@@ -38,19 +38,9 @@ export const CartProvider = ({ children }) => {
 
     const clearCart = useCallback(() => setCart([]), []);
 
-    const increaseItemQuantity = (id) => {
-        const item = cart.find((i) => i.id === id);
-        if (item) addItemToCart(item, 1);
-    };
-
-    const decreaseItemQuantity = (id) => {
-        const item = cart.find((i) => i.id === id);
-        if (item && item.quantity > 1) addItemToCart(item, -1);
-    };
-
     const applyDiscount = (code, validCode) => {
         if (code.toLowerCase().trim() === validCode.toLowerCase().trim()) {
-            setDiscountRate(0.01);
+            setDiscountRate(99.9);
             setDiscountCode(code);
             setIsDiscountApplied(true);
             return true;
@@ -76,8 +66,6 @@ export const CartProvider = ({ children }) => {
                 addItemToCart,
                 removeItemFromCart,
                 clearCart,
-                increaseItemQuantity,
-                decreaseItemQuantity,
                 applyDiscount,
             }}
         >
