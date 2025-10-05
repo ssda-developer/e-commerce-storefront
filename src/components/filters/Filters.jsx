@@ -99,7 +99,7 @@ const Filters = ({ products = [], setFilteredProducts }) => {
 
                 <button
                     type="button"
-                    className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
+                    className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-gray-900 bg-gray-200 rounded-e-lg border border-gray-300 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
                     onClick={handleReset}
                 >
                     Reset

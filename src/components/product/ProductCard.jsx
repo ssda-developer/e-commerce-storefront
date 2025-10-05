@@ -1,7 +1,6 @@
 import { useCartContext } from "../../context/CartContext.jsx";
 import { NavLink } from "react-router";
 import { BsCartPlus, BsFillStarFill } from "react-icons/bs";
-import React from "react";
 
 const ProductCard = ({ card }) => {
     const { addItemToCart } = useCartContext();
@@ -17,11 +16,11 @@ const ProductCard = ({ card }) => {
             end
             className="group flex flex-col p-3 items-center bg-white shadow-sm border border-slate-200 rounded-2xl h-full"
         >
-            <div className="flex relative bg-gray-100 group-hover:bg-gray-200 group-focus-within:bg-gray-200 transition-all duration-200 ease-out w-[268px] h-[268px] overflow-hidden rounded-xl bg-clip-border">
+            <div className="flex relative w-[268px] h-[268px] overflow-hidden rounded-xl bg-clip-border">
                 <img
                     src={card.images[0]}
                     alt={card.description}
-                    className="h-full w-full object-contain rounded-md"
+                    className="h-full w-full object-contain rounded-md bg-gray-100 group-hover:bg-gray-200 group-focus-within:bg-gray-200 transition-all duration-200 ease-out"
                 />
                 <button
                     type="button"
