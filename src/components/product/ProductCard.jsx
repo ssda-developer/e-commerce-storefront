@@ -7,7 +7,7 @@ const ProductCard = ({ card }) => {
 
     const handlerAddItemToCart = (e) => {
         e.preventDefault();
-        addItemToCart(card);
+        addItemToCart(card, 1, true);
     };
 
     const originalPrice = (card.price / (1 - (card.discountPercentage || 0) / 100)) || card.price;

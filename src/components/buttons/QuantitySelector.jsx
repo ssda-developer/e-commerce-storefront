@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-const QuantitySelector = ({ stock = 1, min = 1, onChange }) => {
-    const [value, setValue] = useState(min);
+const QuantitySelector = ({ stock = 1, startValue, min = 1, onChange }) => {
+    const [value, setValue] = useState(startValue < stock ? startValue : stock || min);
 
     const commitNumber = (numb) => {
         if (numb === '') return setValue(min);

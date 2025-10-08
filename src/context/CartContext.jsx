@@ -17,13 +17,14 @@ export const CartProvider = ({ children }) => {
     const [discountCode, setDiscountCode] = useState('');
     const [isDiscountApplied, setIsDiscountApplied] = useState(false);
 
-    const addItemToCart = useCallback((product, quantity = 1) => {
+    const addItemToCart = useCallback((product, quantity = 1, increment = false) => {
         setCart((prev) => {
             const existingItem = prev.find((item) => item.id === product.id);
+
             if (existingItem) {
                 return prev.map((item) =>
                     item.id === product.id
-                        ? { ...item, quantity }
+                        ? { ...item, quantity: increment ? item.quantity + quantity : quantity }
                         : item
                 );
             }

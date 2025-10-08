@@ -10,12 +10,10 @@ const CartPage = () => {
 
     return (
         <div>
-            <div className="flex">
-                <div className="flex justify-between mb-6">
-                    <GoBackButton/>
-                </div>
+            <div className="flex md:px-8 lg:px-12 mb-6">
+                <GoBackButton/>
             </div>
-            <div className="flex gap-8">
+            <div className="flex flex-col lg:flex-row lg:items-start px-4 md:px-8 lg:px-12 gap-6">
                 <CartList cart={cart}/>
                 <OrderSummary cart={cart}/>
             </div>
