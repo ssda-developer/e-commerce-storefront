@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BsClipboard, BsCheck2 } from "react-icons/bs";
+import { BsCheck2, BsClipboard } from "react-icons/bs";
 
 const ClipboardButton = () => {
     const [copied, setCopied] = useState(false);
@@ -13,16 +13,18 @@ const ClipboardButton = () => {
 
     return (
         <button
+            type="button"
             onClick={copyLink}
+            aria-live="polite"
             className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg transition bg-gray-200 hover:bg-gray-300 text-gray-800 cursor-pointer"
         >
             {copied ? (
                 <>
-                    <BsCheck2 className="text-lg" /> Copied
+                    <BsCheck2 className="text-lg"/> Copied
                 </>
             ) : (
                 <>
-                    <BsClipboard className="text-lg" /> Copy Link
+                    <BsClipboard className="text-lg"/> Copy Link
                 </>
             )}
         </button>

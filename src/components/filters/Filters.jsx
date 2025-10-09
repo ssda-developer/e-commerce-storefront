@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { BsChevronDown, BsChevronUp, BsSearch } from 'react-icons/bs';
 
 const ALL_CATEGORIES = 'All categories';
@@ -8,8 +8,11 @@ const Filters = ({ products = [], setFilteredProducts }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORIES);
 
-    const categories = [...new Set(products.map(product =>
-        product.category.charAt(0).toUpperCase() + product.category.slice(1)))];
+    const categories = useMemo(() =>
+            [...new Set(products.map(product =>
+                product.category.charAt(0).toUpperCase() + product.category.slice(1)))],
+        [products]
+    );
 
     useEffect(() => {
         const normalizedText = (text) => text.trim().toLowerCase();

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { useCartContext } from "../../context/CartContext.jsx";
-import { getProducts } from "../../api/products.js";
-import CartButton from "../../components/cart/CartButton.jsx";
-import Filters from "../../components/filters/Filters.jsx";
-import ProductList from "../../components/product/ProductList.jsx";
-import LoadingSpinner from "../../components/common/LoadingSpinner.jsx";
-import EmptyState from "../../components/common/EmptyState.jsx";
+import { useCartContext } from "@/context/CartContext.jsx";
+import CartButton from "@/components/cart/CartButton.jsx";
+import Filters from "@/components/filters/Filters.jsx";
+import ProductList from "@/components/product/ProductList.jsx";
+import LoadingSpinner from "@/components/common/LoadingSpinner.jsx";
+import EmptyState from "@/components/common/EmptyState.jsx";
+import { getProducts } from "@/api/index.js";
 
-function ProductsPage() {
+const ProductsPage = () => {
     const { cart } = useCartContext();
     const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState([]);

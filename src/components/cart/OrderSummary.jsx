@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { useCartContext } from "../../context/CartContext";
-import { VALID_DISCOUNT_CODE } from "../../constants/constants";
+import { useCartContext } from "@/context/CartContext";
+import { VALID_DISCOUNT_CODE } from "@/constants/index.js";
+import { useCartPrice } from "@/utils/useCartPrice.js";
+import { formatPrice } from "@/utils/formatPrice.js";
 
 const OrderSummary = () => {
     const {
@@ -10,25 +12,22 @@ const OrderSummary = () => {
         applyDiscount,
     } = useCartContext();
 
-    const useCartPrice = (cart, discountRate = 0) => {
-        const subtotal = cart.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-        );
-
-        const discount = subtotal * (discountRate / 100);
-        const total = Math.max(subtotal - discount, 0);
-
-        return { subtotal, discount, total };
-    }
-
     const { subtotal, discount, total } = useCartPrice(cart, discountRate);
 
     const [enteredCode, setEnteredCode] = useState('');
     const [error, setError] = useState('');
 
-    const handleApply = () => {
-        const ok = applyDiscount(enteredCode, VALID_DISCOUNT_CODE);
+    const handleApply = (e) => {
+        e.preventDefault();
+        const code = enteredCode.trim();
+
+        if (!code) {
+            setError("Please enter a discount code");
+            return;
+        }
+
+        const ok = applyDiscount(code, VALID_DISCOUNT_CODE);
+
         if (ok) {
             setError('');
         } else {
@@ -42,22 +41,22 @@ const OrderSummary = () => {
 
             <div className="flex justify-between mb-2 text-gray-700">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatPrice(subtotal)}</span>
             </div>
             <div className="flex justify-between mb-2 text-gray-700">
                 <span>Discount</span>
-                <span>{discount ? `-${discount.toFixed(2)}` : "-"}</span>
+                <span>{discount ? `-${formatPrice(discount)}` : "-"}</span>
             </div>
             <div className="flex justify-between mb-2 text-gray-700">
                 <span>Shipping</span>
                 <span>Free</span>
             </div>
 
-            <hr className="my-3" />
+            <hr className="my-3"/>
 
             <div className="flex justify-between font-bold text-gray-900 mb-4">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{formatPrice(total)}</span>
             </div>
 
             <div className="flex gap-2 mb-3">
@@ -66,25 +65,33 @@ const OrderSummary = () => {
                     value={enteredCode}
                     disabled={isDiscountApplied}
                     onChange={(e) => {
-                        setEnteredCode(e.target.value);
+                        setEnteredCode(e.target.value.toUpperCase());
                         setError('');
                     }}
                     placeholder="DISCOUNT10"
+                    aria-label="Discount code"
+                    aria-invalid={Boolean(error)}
+                    aria-describedby={error ? "discount-error" : undefined}
                     className="flex-1 border rounded-lg px-3 py-2 text-sm disabled:bg-green-50 disabled:text-green-700 disabled:border-green-300 disabled:cursor-not-allowed"
                 />
                 {!isDiscountApplied && (
                     <button
+                        type="button"
                         onClick={handleApply}
-                        className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-lg transition-all duration-200 focus:ring-2 focus:ring-yellow-400 cursor-pointer"
+                        disabled={!enteredCode.trim()}
+                        className="bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-200 disabled:text-gray-500 text-black font-semibold px-4 py-2 rounded-lg transition-all duration-200 focus:ring-2 focus:ring-yellow-400 cursor-pointer disabled:cursor-not-allowed"
                     >
                         Apply
                     </button>
                 )}
             </div>
 
-            {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+            {error && <p id="discount-error" className="text-red-500 text-sm mb-3">{error}</p>}
 
-            <button className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-all duration-200 focus:ring-2 focus:ring-gray-400 cursor-pointer">
+            <button
+                type="button"
+                className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-all duration-200 focus:ring-2 focus:ring-gray-400 cursor-pointer"
+            >
                 Check out
             </button>
         </div>

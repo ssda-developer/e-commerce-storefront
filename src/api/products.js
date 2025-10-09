@@ -1,11 +1,9 @@
-import axios from "axios";
-
-const BASE_URL = "https://dummyjson.com";
+import axiosInstance from './axios-instance';
 
 export const getProducts = (params) => {
-    return axios.get(`${BASE_URL}/products`, { params });
+    return axiosInstance.get('/products', { params });
 };
 
 export const getOneProduct = (id) => {
-    return axios.get(`${BASE_URL}/products/${id}`);
+    return axiosInstance.get(`/products/${id}`);
 };

@@ -1,10 +1,10 @@
 import './App.css';
-import { Routes, Route } from "react-router";
+import { Route, Routes } from "react-router-dom";
 import ProductsPage from "./pages/products/ProductsPage.jsx";
 import CartPage from "./pages/cart/CartPage.jsx";
 import ProductDetailPage from "./pages/product-detail-page/ProductDetailPage.jsx";
 import Layout from "./components/layout/Layout.jsx";
-import { ROUTES } from "./constants/constants.js";
+import { ROUTES } from "./constants/index.js";
 
 const App = () => {
     return (

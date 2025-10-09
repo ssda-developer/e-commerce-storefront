@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { getOneProduct } from "../../api/products.js";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import { BsFillStarFill } from "react-icons/bs";
-import ClipboardButton from "../../components/buttons/ClipboardButton.jsx";
-import GoBackButton from "../../components/buttons/GoBackButton.jsx";
-import { useCartContext } from "../../context/CartContext.jsx";
-import LoadingSpinner from "../../components/common/LoadingSpinner.jsx";
-import EmptyState from "../../components/common/EmptyState.jsx";
-import { ROUTES } from "../../constants/constants.js";
+import ClipboardButton from "@/components/buttons/ClipboardButton.jsx";
+import GoBackButton from "@/components/buttons/GoBackButton.jsx";
+import { useCartContext } from "@/context/CartContext.jsx";
+import LoadingSpinner from "@/components/common/LoadingSpinner.jsx";
+import EmptyState from "@/components/common/EmptyState.jsx";
+import { ROUTES } from "@/constants/index.js";
+import { formatPrice } from "@/utils/formatPrice.js";
+import { getOneProduct } from "@/api/index.js";
 
 const ProductDetailPage = () => {
     const { addItemToCart } = useCartContext();
@@ -17,34 +18,32 @@ const ProductDetailPage = () => {
     const [mainImage, setMainImage] = useState('');
     const navigate = useNavigate();
 
-    const fetchProduct = async () => {
-        try {
-            const { data } = await getOneProduct(id);
-            setProduct(data);
-            setMainImage(data.thumbnail)
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const { data } = await getOneProduct(id);
+                setProduct(data);
+                setMainImage(data.thumbnail);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchProduct();
+    }, [id]);
 
     const handlerAddItemToCart = (e, redirect = false) => {
         e.preventDefault();
+
+        if (!product) return;
         addItemToCart(product, 1, true);
 
         if (redirect) navigate(ROUTES.CART);
     };
 
-    const handlerChangeImage = (img) => {
-        setMainImage(img);
-    };
-
-    useEffect(() => {
-        fetchProduct();
-    }, [id]);
-
     if (loading) return <LoadingSpinner/>;
+
     if (!product) {
         return (
             <EmptyState
@@ -58,7 +57,7 @@ const ProductDetailPage = () => {
     }
 
     return (
-        <div className="px-4 py-6">
+        <div className="flex flex-col py-10">
             <div className="flex justify-between mb-6">
                 <GoBackButton/>
                 <ClipboardButton/>
@@ -72,10 +71,14 @@ const ProductDetailPage = () => {
                         className="w-full rounded-2xl shadow-lg object-cover bg-gray-100 border"
                     />
                     <div className="flex gap-2">
-                        {product.images.map((img, idx) => (
-                            <button onClick={() => handlerChangeImage(img)} className="cursor-pointer">
+                        {product.images?.map((img, idx) => (
+                            <button
+                                key={`${img}-${idx}`}
+                                type="button"
+                                onClick={() => setMainImage(img)}
+                                className="cursor-pointer"
+                            >
                                 <img
-                                    key={idx}
                                     src={img}
                                     alt={`${product.title}-${idx}`}
                                     className="w-20 h-20 object-cover rounded-lg border bg-gray-100"
@@ -91,38 +94,45 @@ const ProductDetailPage = () => {
 
                     <div className="flex items-center gap-2">
                         <BsFillStarFill className="text-yellow-400"/>
-                        <span className="font-medium">{product.rating.toFixed(1)}</span>
-                        <span className="text-gray-500 text-sm">({product.reviews.length} reviews)</span>
+                        <span className="font-medium">{Number(product.rating ?? 0).toFixed(1)}</span>
+                        <span className="text-gray-500 text-sm">({product.reviews?.length ?? 0} reviews)</span>
                     </div>
                     <div className="text-sm text-gray-600 space-y-1">
                         <p><span className="font-bold">Brand:</span> {product.brand}</p>
                         <p><span className="font-bold">Weight:</span> {product.weight}</p>
-                        <p><span className="font-bold">Product dimensions:</span> {product.dimensions.depth}D x {product.dimensions.width}W x {product.dimensions.height}H </p>
+                        <p><span className="font-bold">Product dimensions:</span> {product.dimensions?.depth}D
+                            x {product.dimensions?.width}W x {product.dimensions?.height}H </p>
                     </div>
                 </div>
 
                 <div className="col-span-12 lg:col-span-3 flex flex-col">
-                    {product.discountPercentage ? <span className="text-sm text-red-500 font-bold uppercase">Sale</span> : null}
+                    {product.discountPercentage ?
+                        <span className="text-sm text-red-500 font-bold uppercase">Sale</span> : null}
                     <span className="text-sm text-green-600 font-semibold">{product.availabilityStatus}</span>
                     <div className="text-2xl font-bold my-2">
-                        ${product.price.toFixed(2)}
-                        <span className="ml-2 text-sm text-gray-400 line-through">
-                          ${(product.price / (1 - product.discountPercentage / 100)).toFixed(2)}
-                        </span>
+                        {formatPrice(product.price)}
+                        {product.discountPercentage ? (
+                            <span className="ml-2 text-sm text-gray-400 line-through">
+                                {formatPrice(product.price / (1 - (product.discountPercentage / 100)))}
+                            </span>
+                        ) : null}
                     </div>
 
-                    <span className="text-gray-500 text-sm"><span className="font-bold">Available:</span> {product.stock}</span>
+                    <span className="text-gray-500 text-sm"><span
+                        className="font-bold">Available:</span> {product.stock}</span>
 
                     <div className="flex flex-col gap-3 my-4">
                         <button
                             className="w-full bg-yellow-400 text-black font-semibold py-3 rounded-lg hover:bg-yellow-500 transition cursor-pointer"
                             onClick={(e) => handlerAddItemToCart(e)}
+                            type="button"
                         >
                             Add to cart
                         </button>
                         <button
                             className="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-800 transition cursor-pointer"
                             onClick={(e) => handlerAddItemToCart(e, true)}
+                            type="button"
                         >
                             Buy now
                         </button>
@@ -138,7 +148,7 @@ const ProductDetailPage = () => {
                 <div className="col-span-12 mt-10">
                     <h2 className="text-2xl font-bold mb-4">Customer Reviews</h2>
                     <div className="space-y-4">
-                        {product.reviews.map((review, idx) => (
+                        {product.reviews?.map((review, idx) => (
                             <div
                                 key={idx}
                                 className="p-4 border rounded-lg shadow-sm bg-gray-50"

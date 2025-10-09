@@ -1,6 +1,7 @@
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 import { BsCartPlus, BsFillStarFill } from "react-icons/bs";
-import { useCartContext } from "../../context/CartContext.jsx";
+import { useCartContext } from "@/context/CartContext.jsx";
+import { formatPrice } from "@/utils/formatPrice.js";
 
 const ProductCard = ({ card }) => {
     const { addItemToCart } = useCartContext();
@@ -10,16 +11,18 @@ const ProductCard = ({ card }) => {
         addItemToCart(card, 1, true);
     };
 
-    const originalPrice = (card.price / (1 - (card.discountPercentage || 0) / 100)) || card.price;
+    const originalPrice = card?.discountPercentage
+        ? (card.price / (1 - (card.discountPercentage / 100)))
+        : null;
 
     return (
         <NavLink
             to={`/product/${card.id}`}
             end
-            className="group flex flex-col p-3 bg-white border rounded-2xl h-full shadow-sm hover:shadow-lg transition-shadow duration-200 transform focus:outline-none focus:ring-2 focus:ring-indigo-300 cursor-pointer"
+            className="group flex flex-col p-3 bg-white border rounded-2xl h-full shadow-sm hover:shadow-lg transition-shadow duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 cursor-pointer"
             aria-label={`Open product ${card.title}`}
         >
-            <div className="relative border w-full h-61 md:h-64 overflow-hidden rounded-xl flex items-center justify-center">
+            <div className="relative border w-full h-64 overflow-hidden rounded-xl flex items-center justify-center">
                 <img
                     src={card.images?.[0]}
                     alt={card.description || card.title}
@@ -33,7 +36,7 @@ const ProductCard = ({ card }) => {
                     aria-label={`Add ${card.title} to cart`}
                     className="absolute bottom-3 right-3 w-12 h-12 rounded-lg duration-200 bg-indigo-600 text-white flex items-center justify-center text-xl shadow-md hover:bg-indigo-900 active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-300 cursor-pointer lg:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100"
                 >
-                    <BsCartPlus />
+                    <BsCartPlus/>
                 </button>
             </div>
 
@@ -47,12 +50,14 @@ const ProductCard = ({ card }) => {
                         <BsFillStarFill className="text-yellow-400"/>
                         <p className="text-sm font-bold text-gray-900 ml-1">{card.rating ?? "—"}</p>
                     </div>
-                    <div className="flex items-center text-m font-bold text-right">
-                        <span className="mr-1 text-gray-400 line-through text-xs">
-                             ${originalPrice.toFixed(2)}
-                        </span>
+                    <div className="flex items-center text-sm font-bold text-right">
+                        {originalPrice !== null && (
+                            <span className="mr-1 text-gray-400 line-through text-xs">
+                                {formatPrice(originalPrice)}
+                            </span>
+                        )}
                         <div className="text-base text-indigo-700">
-                            ${card.price.toFixed(2)}
+                            {formatPrice(card.price)}
                         </div>
                     </div>
                 </div>

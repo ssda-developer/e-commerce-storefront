@@ -1,9 +1,8 @@
-import React from "react";
 import CartItem from "./CartItem";
-import { useCartContext } from "../../context/CartContext.jsx";
+import { useCartContext } from "@/context/CartContext.jsx";
 import { BsCartX } from "react-icons/bs";
 
-function CartList({ cart }) {
+const CartList = ({ cart }) => {
     const { clearCart } = useCartContext();
     const isCartEmpty = cart.length === 0;
 
@@ -15,6 +14,7 @@ function CartList({ cart }) {
                 </h3>
                 {!isCartEmpty && (
                     <button
+                        type="button"
                         onClick={clearCart}
                         className="text-red-500 hover:text-red-700 font-medium transition-colors duration-200 cursor-pointer focus:ring-2 focus:ring-red-300 rounded"
                     >
@@ -41,9 +41,9 @@ function CartList({ cart }) {
                             <p className="text-sm text-gray-400">No products added yet</p>
                         </li>
                     ) : (
-                        cart.map((item, idx) => (
+                        cart.map((item) => (
                             <li
-                                key={`${item.id}${idx}`}
+                                key={item.id}
                                 className="py-4 border-b border-gray-100 last:border-b-0"
                             >
                                 <CartItem item={item}/>

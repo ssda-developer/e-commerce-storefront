@@ -1,6 +1,6 @@
 import { BsBoxSeam } from "react-icons/bs";
 
-export default function EmptyState({ title, message, showButton = false, buttonText, onButtonClick }) {
+const EmptyState = ({ title, message, showButton = false, buttonText, onButtonClick }) => {
     return (
         <div className="flex flex-col items-center justify-center text-center py-20 text-gray-500 animate-fade-in">
             <BsBoxSeam className="text-6xl mb-4 opacity-70"/>
@@ -18,3 +18,5 @@ export default function EmptyState({ title, message, showButton = false, buttonT
         </div>
     );
 }
+
+export default EmptyState;
