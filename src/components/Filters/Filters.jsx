@@ -53,7 +53,7 @@ const Filters = ({ products = [], setFilteredProducts }) => {
                         aria-haspopup="listbox"
                         aria-expanded={isOpen}
                         onClick={toggleDropdown}
-                        className="inline-flex w-full justify-between items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-800 bg-indigo-50 border rounded-md md:rounded-l-md md:rounded-r-none hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 cursor-pointer"
+                        className="inline-flex w-full justify-between items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-800 bg-indigo-50 border rounded-md md:rounded-l-md md:rounded-r-none hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 cursor-pointer appearance-none leading-[22px]"
                     >
                         {selectedCategory}
                         {isOpen ? <BsChevronUp /> : <BsChevronDown />}
@@ -95,7 +95,7 @@ const Filters = ({ products = [], setFilteredProducts }) => {
                             value={searchTerm}
                             onChange={handleSearchChange}
                             placeholder="Search products..."
-                            className="block w-full p-2.5 pl-10 text-sm border bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                            className="block w-full p-2.5 pl-10 text-sm border bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300 appearance-none leading-[22px]"
                             aria-label="Search products"
                         />
                         <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -107,7 +107,7 @@ const Filters = ({ products = [], setFilteredProducts }) => {
                 <button
                     type="button"
                     onClick={handleReset}
-                    className="px-4 py-2 text-sm font-medium rounded-md md:rounded-r-md md:rounded-l-none bg-indigo-50 border hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 cursor-pointer"
+                    className="px-4 py-2.5 text-sm font-medium rounded-md md:rounded-r-md md:rounded-l-none bg-indigo-50 border hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 cursor-pointer appearance-none leading-[22px]"
                 >
                     Reset
                 </button>

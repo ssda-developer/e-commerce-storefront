@@ -74,7 +74,7 @@ const OrderSummary = () => {
                     aria-label="Discount code"
                     aria-invalid={Boolean(error)}
                     aria-describedby={error ? "discount-error" : undefined}
-                    className="flex-1 border rounded-lg px-3 py-2 text-sm disabled:bg-green-50 disabled:text-green-700 disabled:border-green-300 disabled:cursor-not-allowed"
+                    className="flex-1 w-full border rounded-lg px-3 py-2 text-sm disabled:bg-green-50 disabled:text-green-700 disabled:border-green-300 disabled:cursor-not-allowed"
                 />
                 {!isDiscountApplied && (
                     <button

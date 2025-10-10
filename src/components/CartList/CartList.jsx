@@ -44,7 +44,7 @@ const CartList = ({ cart }) => {
                         cart.map((item) => (
                             <li
                                 key={item.id}
-                                className="py-4 border-b border-gray-100 last:border-b-0"
+                                className="py-4 border-b border-gray-300 last:border-b-0"
                             >
                                 <CartItem item={item} />
                             </li>
