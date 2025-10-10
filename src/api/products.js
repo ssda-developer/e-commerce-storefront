@@ -1,9 +1,9 @@
-import axiosInstance from './axios-instance';
+import axiosInstance from "./axios-instance";
 
 export const getProducts = (params) => {
-    return axiosInstance.get('/products', { params });
+    return axiosInstance.get("/products", { params });
 };
 
-export const getOneProduct = (id) => {
+export const getProductById = (id) => {
     return axiosInstance.get(`/products/${id}`);
 };

@@ -1,63 +1,69 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 const CartContext = createContext();
+const CART_STORAGE_KEY = "cart";
 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState(() => {
         try {
-            const storedCart = localStorage.getItem('cart');
-            return storedCart ? JSON.parse(storedCart) : [];
-        } catch (e) {
-            console.error('Error parsing cart:', e);
+            const stored = localStorage.getItem(CART_STORAGE_KEY);
+
+            return stored ? JSON.parse(stored) : [];
+        } catch (error) {
+            console.error("Error parsing cart from localStorage:\n", error);
+
             return [];
         }
     });
 
     const [discountRate, setDiscountRate] = useState(0);
-    const [discountCode, setDiscountCode] = useState('');
+    const [discountCode, setDiscountCode] = useState("");
     const [isDiscountApplied, setIsDiscountApplied] = useState(false);
 
-    const addItemToCart = useCallback((product, quantity = 1, increment = false) => {
-        setCart((prev) => {
-            const existingItem = prev.find((item) => item.id === product.id);
+    const addItemToCart = useCallback((product, quantity = 1, shouldIncrement = false) => {
+        setCart((prevCart) => {
+            const existingItem = prevCart.find((cartItem) => cartItem.id === product.id);
 
             if (existingItem) {
-                return prev.map((item) =>
-                    item.id === product.id
-                        ? { ...item, quantity: increment ? item.quantity + quantity : quantity }
-                        : item
+                return prevCart.map((cartItem) =>
+                    cartItem.id === product.id
+                        ? { ...cartItem, quantity: shouldIncrement ? cartItem.quantity + quantity : quantity }
+                        : cartItem
                 );
             }
-            return [...prev, { ...product, quantity }];
+
+            return [...prevCart, { ...product, quantity }];
         });
     }, []);
 
     const removeItemFromCart = useCallback(
-        (id) => setCart((prev) => prev.filter((item) => item.id !== id)),
+        (productId) => setCart((prevCart) => prevCart.filter((cartItem) => cartItem.id !== productId)),
         []
     );
 
     const clearCart = useCallback(() => setCart([]), []);
 
-    const applyDiscount = (code, validCode) => {
-        if (code.toLowerCase().trim() === validCode.toLowerCase().trim()) {
+    const applyDiscount = (inputCode, expectedCode) => {
+        if (inputCode.toLowerCase().trim() === expectedCode.toLowerCase().trim()) {
             setDiscountRate(99.9);
-            setDiscountCode(code);
+            setDiscountCode(inputCode);
             setIsDiscountApplied(true);
+
             return true;
         } else {
             setDiscountRate(0);
-            setDiscountCode('');
+            setDiscountCode("");
             setIsDiscountApplied(false);
+
             return false;
         }
     };
 
     useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(cart));
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
     }, [cart]);
 
-    const value = useMemo(() => ({
+    const contextValue = useMemo(() => ({
         cart,
         discountRate,
         discountCode,
@@ -65,11 +71,11 @@ export const CartProvider = ({ children }) => {
         addItemToCart,
         removeItemFromCart,
         clearCart,
-        applyDiscount,
+        applyDiscount
     }), [cart, discountRate, discountCode, isDiscountApplied, addItemToCart, removeItemFromCart, clearCart]);
 
     return (
-        <CartContext.Provider value={value}>
+        <CartContext.Provider value={contextValue}>
             {children}
         </CartContext.Provider>
     );
