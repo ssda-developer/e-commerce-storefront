@@ -7,12 +7,11 @@ import { useState } from "react";
 const OrderSummary = () => {
     const {
         cart,
-        discountRate,
-        isDiscountApplied,
+        discount,
         applyDiscount
     } = useCartContext();
 
-    const { subtotal, discount, total } = calculatePrice(cart, discountRate);
+    const { subtotal, discountAmount, total } = calculatePrice(cart, discount.rate);
 
     const [enteredCode, setEnteredCode] = useState("");
     const [error, setError] = useState("");
@@ -22,19 +21,16 @@ const OrderSummary = () => {
 
         const code = enteredCode.trim();
 
-        if (!code) {
-            setError("Please enter a discount code");
+        if (!code) return setError("Please enter a discount code");
 
-            return;
-        }
+        const isValidDiscount = applyDiscount(code, VALID_DISCOUNT_CODE);
 
-        const ok = applyDiscount(code, VALID_DISCOUNT_CODE);
+        setError(isValidDiscount ? "" : "Invalid discount code");
+    };
 
-        if (ok) {
-            setError("");
-        } else {
-            setError("Invalid discount code");
-        }
+    const handleCodeChange = (e) => {
+        setEnteredCode(e.target.value.toUpperCase());
+        setError("");
     };
 
     return (
@@ -47,7 +43,7 @@ const OrderSummary = () => {
             </div>
             <div className="flex justify-between mb-2 text-gray-700">
                 <span>Discount</span>
-                <span>{discount ? `-${formatPrice(discount)}` : "-"}</span>
+                <span>{discountAmount ? `-${formatPrice(discountAmount)}` : "-"}</span>
             </div>
             <div className="flex justify-between mb-2 text-gray-700">
                 <span>Shipping</span>
@@ -65,18 +61,15 @@ const OrderSummary = () => {
                 <input
                     type="text"
                     value={enteredCode}
-                    disabled={isDiscountApplied}
-                    onChange={(e) => {
-                        setEnteredCode(e.target.value.toUpperCase());
-                        setError("");
-                    }}
+                    disabled={discount.isApplied}
+                    onChange={handleCodeChange}
                     placeholder="DISCOUNT10"
                     aria-label="Discount code"
                     aria-invalid={Boolean(error)}
                     aria-describedby={error ? "discount-error" : undefined}
                     className="flex-1 w-full border rounded-lg px-3 py-2 text-sm disabled:bg-green-50 disabled:text-green-700 disabled:border-green-300 disabled:cursor-not-allowed"
                 />
-                {!isDiscountApplied && (
+                {!discount.isApplied && (
                     <button
                         type="button"
                         onClick={handleApply}

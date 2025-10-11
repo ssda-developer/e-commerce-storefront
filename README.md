@@ -42,7 +42,7 @@ usability.
 ```
 src/
  ├── api/          # API utilities and Axios instance
- ├── components/   # Reusable UI components
+ ├── components/   # Reusable components
  ├── context/      # React Context
  ├── pages/        # Routed pages
  ├── utils/        # Helper functions

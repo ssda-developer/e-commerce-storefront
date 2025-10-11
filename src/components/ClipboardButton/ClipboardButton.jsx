@@ -1,14 +1,25 @@
 import { useState } from "react";
-import { BsCheck2, BsClipboard } from "react-icons/bs";
+import { BsClipboard, BsClipboardCheck, BsClipboardX } from "react-icons/bs";
 
 const ClipboardButton = () => {
-    const [copied, setCopied] = useState(false);
+    const [status, setStatus] = useState("idle");
+    const statusMap = {
+        idle: { icon: <BsClipboard className="text-lg" />, text: "Copy Link" },
+        copied: { icon: <BsClipboardCheck className="text-lg" />, text: "Copied" },
+        error: { icon: <BsClipboardX className="text-lg" />, text: "Failed to copy" }
+    };
+    const { icon, text } = statusMap[status];
 
-    const copyLink = () => {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1500);
-        });
+    const copyLink = async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            setStatus("copied");
+            setTimeout(() => setStatus("idle"), 1500);
+        } catch (error) {
+            console.error("Failed to copy:", error);
+            setStatus("error");
+            setTimeout(() => setStatus("idle"), 1500);
+        }
     };
 
     return (
@@ -18,15 +29,7 @@ const ClipboardButton = () => {
             aria-live="polite"
             className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg transition bg-gray-200 hover:bg-indigo-200 text-gray-800 cursor-pointer"
         >
-            {copied ? (
-                <>
-                    <BsCheck2 className="text-lg" /> Copied
-                </>
-            ) : (
-                <>
-                    <BsClipboard className="text-lg" /> Copy Link
-                </>
-            )}
+            {icon} {text}
         </button>
     );
 };

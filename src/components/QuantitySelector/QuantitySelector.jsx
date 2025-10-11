@@ -3,14 +3,9 @@ import { useState } from "react";
 const QuantitySelector = ({ stock = 1, startValue, min = 1, onChange }) => {
     const [value, setValue] = useState(startValue < stock ? startValue : stock || min);
 
-    const clampQuantity = (numb) => {
-        let next;
-
-        if (numb === "") next = min;
-        else if (numb > stock) next = stock;
-        else if (numb < min) next = min;
-        else if (numb) next = numb;
-        else next = min;
+    const clampQuantity = (input) => {
+        let next = Number(input) || min;
+        next = Math.min(Math.max(next, min), stock || min);
 
         if (next !== value) {
             setValue(next);

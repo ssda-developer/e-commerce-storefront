@@ -15,18 +15,20 @@ const Filters = ({ products = [], setFilteredProducts }) => {
     );
 
     useEffect(() => {
-        const normalizedText = (text) => text.trim().toLowerCase();
+        const normalizedCategory = selectedCategory.trim().toLowerCase();
+        const normalizedSearch = searchTerm.trim().toLowerCase();
 
-        const filteredProducts = products.filter(product => {
-            const categoryMatch = selectedCategory === ALL_CATEGORIES
-                ? true
-                : normalizedText(product.category) === normalizedText(selectedCategory);
-            const searchTermMatch = normalizedText(product.title).includes(normalizedText(searchTerm));
+        const filtered = products.filter(({ category, title }) => {
+            const matchesCategory =
+                normalizedCategory === ALL_CATEGORIES.toLowerCase() ||
+                category.trim().toLowerCase() === normalizedCategory;
 
-            return categoryMatch && searchTermMatch;
+            const matchesSearch = title.toLowerCase().includes(normalizedSearch);
+
+            return matchesCategory && matchesSearch;
         });
 
-        setFilteredProducts(filteredProducts);
+        setFilteredProducts(filtered);
     }, [searchTerm, selectedCategory, products, setFilteredProducts]);
 
     const toggleDropdown = () => setIsOpen((prev) => !prev);

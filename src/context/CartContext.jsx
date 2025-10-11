@@ -1,7 +1,7 @@
+import { CART_STORAGE_KEY } from "@/constants";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 const CartContext = createContext();
-const CART_STORAGE_KEY = "ecommerce_cart_storage";
 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState(() => {
@@ -16,9 +16,11 @@ export const CartProvider = ({ children }) => {
         }
     });
 
-    const [discountRate, setDiscountRate] = useState(0);
-    const [discountCode, setDiscountCode] = useState("");
-    const [isDiscountApplied, setIsDiscountApplied] = useState(false);
+    const [discount, setDiscount] = useState({
+        rate: 0,
+        code: "",
+        isApplied: false
+    });
 
     const addItemToCart = useCallback((product, quantity = 1, shouldIncrement = false) => {
         setCart((prevCart) => {
@@ -45,15 +47,19 @@ export const CartProvider = ({ children }) => {
 
     const applyDiscount = (inputCode, expectedCode) => {
         if (inputCode.toLowerCase().trim() === expectedCode.toLowerCase().trim()) {
-            setDiscountRate(99.9);
-            setDiscountCode(inputCode);
-            setIsDiscountApplied(true);
+            setDiscount({
+                rate: 99.9,
+                code: inputCode,
+                isApplied: true
+            });
 
             return true;
         } else {
-            setDiscountRate(0);
-            setDiscountCode("");
-            setIsDiscountApplied(false);
+            setDiscount({
+                rate: 0,
+                code: "",
+                isApplied: false
+            });
 
             return false;
         }
@@ -65,14 +71,12 @@ export const CartProvider = ({ children }) => {
 
     const contextValue = useMemo(() => ({
         cart,
-        discountRate,
-        discountCode,
-        isDiscountApplied,
+        discount,
         addItemToCart,
         removeItemFromCart,
         clearCart,
         applyDiscount
-    }), [cart, discountRate, discountCode, isDiscountApplied, addItemToCart, removeItemFromCart, clearCart]);
+    }), [cart, discount, addItemToCart, removeItemFromCart, clearCart]);
 
     return (
         <CartContext.Provider value={contextValue}>

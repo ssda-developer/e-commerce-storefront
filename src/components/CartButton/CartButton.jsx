@@ -1,10 +1,16 @@
+import { ROUTES } from "@/constants";
+import { useCartContext } from "@/context/CartContext";
 import { BsCart } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
 
-const CartButton = ({ count }) => {
+const CartButton = () => {
+    const { cart } = useCartContext();
+
+    const count = cart.reduce((total, item) => total + (item.quantity || 0), 0);
+
     return (
         <NavLink
-            to="/cart"
+            to={ROUTES.CART}
             aria-label={`Open cart${count > 0 ? ` (${count})` : ""}`}
             className="fixed right-0 top-[90px] z-[999] rounded-tl-2xl rounded-bl-2xl bg-white p-4 shadow-xl hover:shadow-2xl transition"
         >

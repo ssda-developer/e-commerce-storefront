@@ -1,8 +1,8 @@
 import { getProductById } from "@/api";
 import ClipboardButton from "@/components/ClipboardButton";
-import EmptyState from "@/components/EmptyState";
 import GoBackButton from "@/components/GoBackButton";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import ProductEmpty from "@/components/ProductEmpty";
 import { ROUTES } from "@/constants";
 import { useCartContext } from "@/context/CartContext";
 import { formatPrice } from "@/utils/format-price";
@@ -16,6 +16,7 @@ const ProductDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState(null);
     const [mainImage, setMainImage] = useState("");
+    const [added, setAdded] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -41,15 +42,20 @@ const ProductDetailPage = () => {
         if (!product) return;
 
         addItemToCart(product, 1, true);
+        setAdded(true);
 
         if (redirect) navigate(ROUTES.CART);
+
+        setTimeout(() => {
+            setAdded(false);
+        }, 1500);
     };
 
     if (loading) return <LoadingSpinner />;
 
     if (!product) {
         return (
-            <EmptyState
+            <ProductEmpty
                 title="Product not found"
                 message="The product you’re looking for doesn’t exist or may have been removed"
                 showButton={true}
@@ -126,11 +132,14 @@ const ProductDetailPage = () => {
 
                     <div className="flex flex-col gap-3 my-4">
                         <button
-                            className="w-full bg-yellow-400 text-black font-semibold py-3 rounded-lg hover:bg-yellow-500 transition cursor-pointer"
+                            className={`w-full font-semibold py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2 ${added ? "bg-yellow-200" : "bg-yellow-400 hover:bg-yellow-500"} text-black`}
                             onClick={(e) => handleAddItemToCart(e)}
                             type="button"
+                            disabled={added}
+                            aria-live="polite"
+                            aria-label={added ? "Product added to cart" : "Add to cart"}
                         >
-                            Add to cart
+                            {added ? "Product added to cart" : "Add to cart"}
                         </button>
                         <button
                             className="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-800 transition cursor-pointer"
