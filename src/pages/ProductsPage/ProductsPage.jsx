@@ -1,5 +1,4 @@
 import { getProducts } from "@/api";
-import CartButton from "@/components/CartButton";
 import Filters from "@/components/Filters";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ProductEmpty from "@/components/ProductEmpty";
@@ -44,35 +43,32 @@ const ProductsPage = () => {
     const isFilterEmpty = !isApiEmpty && filteredProducts.length === 0;
 
     return (
-        <>
-            <CartButton />
-            <div className="flex flex-col py-10">
+        <div className="flex flex-col py-10">
 
-                {isApiEmpty ? (
-                    <ProductEmpty title="No products available"
-                                  message="Something went wrong or the catalog is empty"
-                                  showButton={true}
-                                  buttonText="Refresh"
-                                  onButtonClick={fetchProducts}
+            {isApiEmpty ? (
+                <ProductEmpty title="No products available"
+                              message="Something went wrong or the catalog is empty"
+                              showButton={true}
+                              buttonText="Refresh"
+                              onButtonClick={fetchProducts}
+                />
+            ) : (
+                <>
+                    <Filters
+                        products={products}
+                        setFilteredProducts={setFilteredProducts}
                     />
-                ) : (
-                    <>
-                        <Filters
-                            products={products}
-                            setFilteredProducts={setFilteredProducts}
-                        />
 
-                        {isFilterEmpty ? (
-                            <ProductEmpty title="No products match your filters"
-                                          message="Try adjusting your filters to see more results"
-                            />
-                        ) : (
-                            <ProductList products={filteredProducts} />
-                        )}
-                    </>
-                )}
-            </div>
-        </>
+                    {isFilterEmpty ? (
+                        <ProductEmpty title="No products match your filters"
+                                      message="Try adjusting your filters to see more results"
+                        />
+                    ) : (
+                        <ProductList products={filteredProducts} />
+                    )}
+                </>
+            )}
+        </div>
     );
 };
 
