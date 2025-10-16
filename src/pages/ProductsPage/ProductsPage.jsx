@@ -44,7 +44,6 @@ const ProductsPage = () => {
 
     return (
         <div className="flex flex-col py-10">
-
             {isApiEmpty ? (
                 <ProductEmpty title="No products available"
                               message="Something went wrong or the catalog is empty"

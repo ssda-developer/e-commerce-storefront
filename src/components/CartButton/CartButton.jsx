@@ -1,6 +1,5 @@
 import { ROUTES } from "@/constants";
 import { useCartContext } from "@/context/CartContext";
-import { useMemo } from "react";
 import { BsCart } from "react-icons/bs";
 import { matchPath, NavLink, useLocation } from "react-router-dom";
 
@@ -8,15 +7,9 @@ const CartButton = () => {
     const { cart } = useCartContext();
     const location = useLocation();
 
-    const isHidden = useMemo(() =>
-            matchPath({ path: ROUTES.CART, end: false }, location.pathname),
-        [location.pathname]
-    );
+    const isHidden = !!matchPath({ path: ROUTES.CART, end: false }, location.pathname);
 
-    const count = useMemo(
-        () => cart.reduce((total, item) => total + (item.quantity || 0), 0),
-        [cart]
-    );
+    const count = cart.reduce((total, item) => total + (item.quantity || 0), 0);
 
     if (isHidden) return null;
 
